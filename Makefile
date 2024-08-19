@@ -8,6 +8,12 @@ __check_defined = \
 
 
 # Main Makefile
+V ?= 0 # Verbose (0: quiet, 1: print all)
+Q  =
+ifneq ($(V),1)
+Q  = @
+endif
+
 TARGET_DIR   ?= 
 TARGET_ARCH  ?= rv32imac
 TARGET_PLAT  ?= esp32c6
@@ -58,23 +64,23 @@ dir:
 	@mkdir -p $(MK_DIR)
 
 $(BIN): $(ELF)
-	@$(OBJCOPY) $(ELF) -O binary $@
+	$(Q) $(OBJCOPY) $(ELF) -O binary $@
 
 $(ELF): $(LSCRIPT) $(OBJS)
-	@$(LD) $(LDFLAGS) -T $(LSCRIPT) -o $(ELF) $(OBJS)
+	$(Q) $(LD) $(LDFLAGS) -T $(LSCRIPT) -o $(ELF) $(OBJS)
 
 $(BUILD_DIR)/%.c.o: %.c
-	@$(CC) $(CFLAGS) $(MACROS) -c $< -o $@
+	$(Q) $(CC) $(CFLAGS) $(MACROS) -c $< -o $@
 
 $(BUILD_DIR)/%.s.o: %.S
-	@$(CC) $(ASMFLAGS) $(MACROS) -c $< -o $@
+	$(Q) $(CC) $(ASMFLAGS) $(MACROS) -c $< -o $@
 
 clean:
 ifdef TARGET_DIR
-	rm -rf $(BUILD_DIR)/$(TARGET_DIR)
-	rm -rf $(ELF) $(BIN)
+	$(Q)rm -rf $(BUILD_DIR)/$(TARGET_DIR)
+	$(Q)rm -rf $(ELF) $(BIN)
 else
-	rm -rf $(BUILD_DIR)
+	$(Q)rm -rf $(BUILD_DIR)
 endif
 
 tags:
