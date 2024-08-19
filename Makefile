@@ -10,7 +10,7 @@ __check_defined = \
 # Main Makefile
 TARGET_DIR   ?= 
 TARGET_ARCH  ?= rv32imac
-TARGET_PLAT  ?= esp32-c6-wroom-1
+TARGET_PLAT  ?= esp32c6
 TARGET_NAME   = $(basename $(notdir $(TARGET_DIR)))
 
 
