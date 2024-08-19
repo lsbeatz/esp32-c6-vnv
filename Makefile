@@ -70,7 +70,12 @@ $(BUILD_DIR)/%.s.o: %.S
 	@$(CC) $(ASMFLAGS) $(MACROS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET_IMAGE)
+ifdef TARGET_DIR
+	rm -rf $(BUILD_DIR)/$(TARGET_DIR)
+	rm -rf $(ELF) $(BIN)
+else
+	rm -rf $(BUILD_DIR)
+endif
 
 tags:
 	@ctags -R
