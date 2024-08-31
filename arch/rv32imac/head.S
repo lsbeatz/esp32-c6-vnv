@@ -1,4 +1,4 @@
-.section ".text.head"
+.section ".init"
 
 .global __start
 __start:

@@ -9,9 +9,13 @@ MEMORY
 
 SECTIONS
 {
+	.init :
+	{
+		*(.init)
+	} > FLASH
+
 	.text :
 	{
-		*(.text.head)
 		*(.text)
 	} > FLASH
 	
