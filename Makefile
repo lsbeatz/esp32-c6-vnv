@@ -34,6 +34,7 @@ TOOLCHAIN_NAME ?= riscv32-esp-elf
 CC		= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-gcc
 LD		= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-ld
 OBJCOPY	= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-objcopy
+OBJDUMP	= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-objdump
 
 LDFLAGS   = -nostdlib
 CFLAGS    = -Wall -ffreestanding
@@ -52,9 +53,10 @@ OBJS  = $(addprefix $(BUILD_DIR)/,$(SRCS:%.c=%.c.o))
 OBJS += $(addprefix $(BUILD_DIR)/,$(ASMS:%.S=%.s.o))
 ELF   = $(BUILD_DIR)/$(TARGET_NAME).elf
 BIN   = $(BUILD_DIR)/$(TARGET_NAME).bin
+DASM  = $(BUILD_DIR)/$(TARGET_NAME).dasm
 
 
-all: dir $(BIN)
+all: dir $(BIN) $(DASM)
 
 SUB_DIR = $(dir $(SRCS) $(ASMS)) 
 MK_DIR  = $(addprefix $(BUILD_DIR)/,$(SUB_DIR))
@@ -65,6 +67,9 @@ dir:
 
 $(BIN): $(ELF)
 	$(Q) $(OBJCOPY) $(ELF) -O binary $@
+
+$(DASM): $(ELF)
+	$(Q) $(OBJDUMP) -D $(ELF) > $@
 
 $(ELF): $(LSCRIPT) $(OBJS)
 	$(Q) $(LD) $(LDFLAGS) -T $(LSCRIPT) -o $(ELF) $(OBJS)
