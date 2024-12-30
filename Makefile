@@ -28,8 +28,8 @@ SRC_DIR     = arch/$(TARGET_ARCH) \
 			  drivers
 
 
-TOOLCHAIN_PATH ?= /root/.espressif/tools/riscv32-esp-elf/esp-13.2.0_20240530/riscv32-esp-elf/bin
-TOOLCHAIN_NAME ?= riscv32-esp-elf
+TOOLCHAIN_PATH ?= /opt/riscv/bin
+TOOLCHAIN_NAME ?= riscv32-unknown-elf
 
 CC		= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-gcc
 LD		= $(TOOLCHAIN_PATH)/$(TOOLCHAIN_NAME)-ld
@@ -40,7 +40,8 @@ LDFLAGS   = -nostdlib
 CFLAGS    = -Wall -ffreestanding
 CFLAGS   += -march=$(TARGET_ARCH) -mabi=ilp32  -mcmodel=medlow
 CFLAGS   += -I$(INCLUDE_DIR)
-ASMFLAGS  = -I$(INCLUDE_DIR)
+CFLAGS   += $(addprefix -I,$(SRC_DIR))
+ASMFLAGS  = -I$(INCLUDE_DIR) -march=$(TARGET_ARCH)_zicsr
 MACROS    = -DTARGET_ARCH=$(TARGET_ARCH) \
 			-DTARGET_PLAT=$(TARGET_PLAT) \
 
@@ -66,7 +67,7 @@ dir:
 	@mkdir -p $(MK_DIR)
 
 $(BIN): $(ELF)
-	$(Q) $(OBJCOPY) $(ELF) -O binary $@
+	$(Q) $(OBJCOPY) -S $(ELF) -O binary $@
 
 $(DASM): $(ELF)
 	$(Q) $(OBJDUMP) -D $(ELF) > $@
