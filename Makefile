@@ -42,6 +42,7 @@ CFLAGS   += -march=$(TARGET_ARCH) -mabi=ilp32  -mcmodel=medlow
 CFLAGS   += -I$(INCLUDE_DIR)
 CFLAGS   += $(addprefix -I,$(SRC_DIR))
 ASMFLAGS  = -I$(INCLUDE_DIR) -march=$(TARGET_ARCH)_zicsr
+OBJFLAGS  = -j .init -j .text*
 MACROS    = -DTARGET_ARCH=$(TARGET_ARCH) \
 			-DTARGET_PLAT=$(TARGET_PLAT) \
 
@@ -67,7 +68,7 @@ dir:
 	@mkdir -p $(MK_DIR)
 
 $(BIN): $(ELF)
-	$(Q) $(OBJCOPY) -S $(ELF) -O binary $@
+	$(Q) $(OBJCOPY) $(OBJFLAGS) -S $(ELF) -O binary $@
 
 $(DASM): $(ELF)
 	$(Q) $(OBJDUMP) -D $(ELF) > $@
