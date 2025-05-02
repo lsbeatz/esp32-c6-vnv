@@ -22,7 +22,7 @@ SECTIONS
 	.rodata :
 	{
 		*(.rodata)
-	} > RAM
+	} > FLASH
 
 	.data :
 	{
